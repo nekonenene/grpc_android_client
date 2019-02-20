@@ -15,11 +15,15 @@ class HelloActivity : AppCompatActivity() {
 
         nameEditText.setText(R.string.default_name)
         ageEditText.setText(R.string.default_age)
+        outputTextView.text = ""
     }
 
-    fun clickSendButton() {
+    private fun clickSendButton() {
         val name = nameEditText.text
         val age = ageEditText.text
-        Log.d(localClassName, "clicked! Name: $name, Age: $age")
+        val str = "Name: $name, Age: $age"
+
+        Log.d(localClassName, "clicked! $str")
+        outputTextView.text = str
     }
 }
