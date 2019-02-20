@@ -1,0 +1,24 @@
+// Build command: protoc pb/hello.proto --go_out plugins=grpc:./
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.hello";
+option java_outer_classname = "HelloProto";
+
+package hello;
+
+// The greeting service definition.
+service Greeter {
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+}
+
+// The request message containing the user's name and age
+message HelloRequest {
+  string name = 1;
+  int32 age = 2;
+}
+
+// The response message containing the greetings
+message HelloReply {
+  string message = 1;
+}
