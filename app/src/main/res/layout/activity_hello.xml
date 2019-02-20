@@ -26,10 +26,10 @@
       android:layout_height="wrap_content"
       android:inputType="textPersonName"
       android:ems="10"
-      android:id="@+id/name_edit_text"
+      android:id="@+id/nameEditText"
       app:layout_constraintTop_toTopOf="parent"
       android:layout_marginBottom="16dp"
-      app:layout_constraintBottom_toTopOf="@+id/age_edit_text"
+      app:layout_constraintBottom_toTopOf="@+id/ageEditText"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       android:hint="@string/name"/>
@@ -39,8 +39,8 @@
       android:layout_height="wrap_content"
       android:inputType="number"
       android:ems="10"
-      android:id="@+id/age_edit_text"
-      app:layout_constraintTop_toBottomOf="@+id/name_edit_text"
+      android:id="@+id/ageEditText"
+      app:layout_constraintTop_toBottomOf="@+id/nameEditText"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintVertical_bias="0.023"
@@ -53,11 +53,11 @@
     <Button
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:id="@+id/button"
+      android:id="@+id/sendButton"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/age_edit_text"
+      app:layout_constraintTop_toBottomOf="@+id/ageEditText"
       android:text="@string/send"
       style="@style/Widget.AppCompat.Button.Colored"/>
   </LinearLayout>

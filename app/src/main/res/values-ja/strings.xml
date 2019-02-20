@@ -3,4 +3,6 @@
   <string name="name">名前</string>
   <string name="age">年齢</string>
   <string name="send">送信</string>
+  <string name="default_name">Kikuko</string>
+  <string name="default_age">17</string>
 </resources>

@@ -3,4 +3,6 @@
   <string name="name">Name</string>
   <string name="age">Age</string>
   <string name="send">Send</string>
+  <string name="default_name">Kikuko</string>
+  <string name="default_age">17</string>
 </resources>
