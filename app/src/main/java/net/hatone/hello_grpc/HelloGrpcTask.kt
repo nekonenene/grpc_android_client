@@ -12,12 +12,14 @@ class HelloGrpcTask constructor(private val app: Application, private val callba
     private var channel: ManagedChannel? = null
 
     interface HelloGrpcTaskCallback {
-        fun postExecute(result: String)
+        fun onPreExecute()
+        fun onPostExecute(result: String)
+        fun onCancelled()
     }
 
-    override fun doInBackground(vararg params: String): String {
-        val name = params[0]
-        val age = params[1].toInt()
+    override fun doInBackground(vararg args: String): String {
+        val name = args[0]
+        val age = args[1].toInt()
         val host = "grpc-test.hatone.net"
         val port = 443
 
@@ -42,6 +44,14 @@ class HelloGrpcTask constructor(private val app: Application, private val callba
             Thread.currentThread().interrupt()
         }
 
-        callback.postExecute(result)
+        callback.onPostExecute(result)
+    }
+
+    override fun onPreExecute() {
+        callback.onPreExecute()
+    }
+
+    override fun onCancelled() {
+        callback.onCancelled()
     }
 }
