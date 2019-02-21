@@ -5,8 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import kotlinx.android.synthetic.main.activity_hello.*
 
-class HelloActivity : AppCompatActivity() {
-
+class HelloActivity : AppCompatActivity(), HelloGrpcTask.HelloGrpcTaskCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hello)
@@ -26,6 +25,11 @@ class HelloActivity : AppCompatActivity() {
         Log.d(localClassName, "clicked! $str")
         outputTextView.text = str
 
-        HelloGrpcTask(this).execute(name.toString(), age.toString())
+        HelloGrpcTask(application, this).execute(name.toString(), age.toString())
+    }
+
+    override fun postExecute(result: String) {
+        outputTextView.text = result
+        sendButton.isEnabled = true
     }
 }

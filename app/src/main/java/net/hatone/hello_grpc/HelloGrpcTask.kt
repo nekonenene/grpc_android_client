@@ -1,20 +1,19 @@
 package net.hatone.hello_grpc
 
-import android.app.Activity
 import android.app.Application
 import android.os.AsyncTask
 import android.util.Log
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import io.grpc.examples.hello.*
-import kotlinx.android.synthetic.main.activity_hello.*
-import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit
 
-class HelloGrpcTask constructor(activity: Activity) : AsyncTask<String, Void, String>() {
-    private val activityReference: WeakReference<Activity> = WeakReference(activity)
-    private val app: Application = activity.application
+class HelloGrpcTask constructor(private val app: Application, private val callback: HelloGrpcTaskCallback) : AsyncTask<String, Void, String>() {
     private var channel: ManagedChannel? = null
+
+    interface HelloGrpcTaskCallback {
+        fun postExecute(result: String)
+    }
 
     override fun doInBackground(vararg params: String): String {
         val name = params[0]
@@ -43,8 +42,6 @@ class HelloGrpcTask constructor(activity: Activity) : AsyncTask<String, Void, St
             Thread.currentThread().interrupt()
         }
 
-        val activity = activityReference.get() ?: return
-        activity.outputTextView.text = result
-        activity.sendButton.isEnabled = true
+        callback.postExecute(result)
     }
 }
