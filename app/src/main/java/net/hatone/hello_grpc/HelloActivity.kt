@@ -25,5 +25,7 @@ class HelloActivity : AppCompatActivity() {
 
         Log.d(localClassName, "clicked! $str")
         outputTextView.text = str
+
+        HelloGrpcTask(this).execute(name.toString(), age.toString())
     }
 }
