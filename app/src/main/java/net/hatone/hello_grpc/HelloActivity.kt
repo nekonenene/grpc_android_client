@@ -23,17 +23,34 @@ class HelloActivity : AppCompatActivity() {
     }
 
     private fun clickSendButton() {
-        inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+        inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
 
         val name = nameEditText.text
         val age = ageEditText.text
+        Log.d(localClassName, "Clicked! (Name: $name, Age: $age)")
 
-        val str = "Name: $name, Age: $age"
-        Log.d(localClassName, "Clicked! $str")
+        if (!validateForms()) {
+            return
+        }
 
         outputTextView.text = getString(R.string.connecting)
 
         HelloGrpcTask(application, generateCallback()).execute(name.toString(), age.toString())
+    }
+
+    private fun validateForms(): Boolean {
+        var isOK = true
+
+        if (nameEditText.text.isEmpty()) {
+            nameEditText.error = getString(R.string.please_input_x, getString(R.string.name))
+            isOK = false
+        }
+        if (ageEditText.text.isEmpty()) {
+            ageEditText.error = getString(R.string.please_input_x, getString(R.string.age))
+            isOK = false
+        }
+
+        return isOK
     }
 
     private fun generateCallback(): HelloGrpcTask.HelloGrpcTaskCallback {
