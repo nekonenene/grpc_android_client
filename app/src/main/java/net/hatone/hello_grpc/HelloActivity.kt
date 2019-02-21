@@ -1,15 +1,20 @@
 package net.hatone.hello_grpc
 
+import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import kotlinx.android.synthetic.main.activity_hello.*
 
 class HelloActivity : AppCompatActivity() {
+    lateinit var inputMethodManager: InputMethodManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_hello)
 
+        inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         sendButton.setOnClickListener { clickSendButton() }
 
         nameEditText.setText(R.string.default_name)
@@ -18,18 +23,21 @@ class HelloActivity : AppCompatActivity() {
     }
 
     private fun clickSendButton() {
+        inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+
         val name = nameEditText.text
         val age = ageEditText.text
-        val str = "Name: $name, Age: $age"
 
-        Log.d(localClassName, "clicked! $str")
-        outputTextView.text = str
+        val str = "Name: $name, Age: $age"
+        Log.d(localClassName, "Clicked! $str")
+
+        outputTextView.text = getString(R.string.connecting)
 
         HelloGrpcTask(application, generateCallback()).execute(name.toString(), age.toString())
     }
 
     private fun generateCallback(): HelloGrpcTask.HelloGrpcTaskCallback {
-        return object : HelloGrpcTask.HelloGrpcTaskCallback {
+        return object: HelloGrpcTask.HelloGrpcTaskCallback {
             override fun onPreExecute() {
                 sendButton.isEnabled = false
             }
