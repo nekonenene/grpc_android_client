@@ -2,38 +2,46 @@ aliases:
   android_docker: &android_docker
     docker:
       - image: circleci/android:api-28
-  build_steps: &build_steps
-    - checkout
-    - restore_cache:
+  steps:
+    - restore_cache: &restore_cache
         key: jars-{{ checksum "build.gradle.kts" }}-{{ checksum  "app/build.gradle.kts" }}
-    - run:
+    - run: &download_deps
         name: Download dependencies
         command: ./gradlew androidDependencies
-    - save_cache:
+    - save_cache: &save_cache
         paths:
           - ~/.gradle
         key: jars-{{ checksum "build.gradle.kts" }}-{{ checksum  "app/build.gradle.kts" }}
-    - run:
+    - run: &build_debug_apk
         name: Build debug APK
         command: ./gradlew assembleDebug
+    - run: &upload_to_deploy_gate
+        name: Upload to DeployGate # Set DG_API_KEY in CircleCI
+        command: |
+          COMMIT_HASH=$(git log --format="%H" -n 1 | cut -c 1-8)
+          APK_PATH=app/build/outputs/apk/debug/app-debug.apk
+          USERNAME=nekonenene
+          curl -F "file=@${APK_PATH}" -F "token=${DG_API_KEY}" -F "message=Build by CircleCI <${COMMIT_HASH}>" https://deploygate.com/api/users/${USERNAME}/apps
 
 version: 2
 jobs:
   build:
     <<: *android_docker
     steps:
-      - *build_steps
+      - checkout
+      - restore_cache: *restore_cache
+      - run: *download_deps
+      - save_cache: *save_cache
+      - run: *build_debug_apk
   deploy:
     <<: *android_docker
     steps:
-      - *build_steps
-      - run:
-          name: Upload to DeployGate # Set DG_API_KEY in CircleCI
-          command: |
-            COMMIT_HASH=$(git log --format="%H" -n 1 | cut -c 1-8)
-            APK_PATH=app/build/outputs/apk/debug/app-debug.apk
-            USERNAME=nekonenene
-            curl -F "file=@${APK_PATH}" -F "token=${DG_API_KEY}" -F "message=Build by CircleCI <${COMMIT_HASH}>" https://deploygate.com/api/users/${USERNAME}/apps
+      - checkout
+      - restore_cache: *restore_cache
+      - run: *download_deps
+      - save_cache: *save_cache
+      - run: *build_debug_apk
+      - run: *upload_to_deploy_gate
 
 workflows:
   version: 2
