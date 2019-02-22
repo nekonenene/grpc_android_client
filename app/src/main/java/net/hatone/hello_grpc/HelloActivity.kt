@@ -15,14 +15,14 @@ class HelloActivity : AppCompatActivity() {
         setContentView(R.layout.activity_hello)
 
         inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        sendButton.setOnClickListener { clickSendButton() }
+        sendButton.setOnClickListener { onClickSendButton() }
 
         nameEditText.setText(R.string.default_name)
         ageEditText.setText(R.string.default_age)
         outputTextView.text = ""
     }
 
-    private fun clickSendButton() {
+    private fun onClickSendButton() {
         inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
 
         val name = nameEditText.text
