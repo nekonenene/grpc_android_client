@@ -2,6 +2,8 @@ aliases:
   android_docker: &android_docker
     docker:
       - image: circleci/android:api-28
+        environment:
+          TZ: Asia/Tokyo
   steps:
     - restore_cache: &restore_cache
         key: jars-{{ checksum "build.gradle.kts" }}-{{ checksum  "app/build.gradle.kts" }}
@@ -22,7 +24,7 @@ aliases:
           TIME=$(date "+%Y/%m/%d %H:%M")
           COMMIT_HASH=$(git log --format="%H" -n 1 | cut -c 1-8)
           USERNAME=nekonenene
-          curl -F "file=@${APK_PATH}" -F "token=${DG_API_KEY}" -F "message=(${TIME}) Build by CircleCI <${COMMIT_HASH}>" https://deploygate.com/api/users/${USERNAME}/apps
+          curl -F "file=@${APK_PATH}" -F "token=${DG_API_KEY}" -F "message=Build by CircleCI <${COMMIT_HASH}> (${TIME})" https://deploygate.com/api/users/${USERNAME}/apps
 
 version: 2
 jobs:
