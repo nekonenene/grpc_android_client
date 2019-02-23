@@ -6,14 +6,14 @@ aliases:
           TZ: Asia/Tokyo
   steps:
     - restore_cache: &restore_cache
-        key: jars-{{ checksum "build.gradle.kts" }}-{{ checksum  "app/build.gradle.kts" }}
+        key: jars-{{ checksum "build.gradle.kts" }}-{{ checksum "app/build.gradle.kts" }}
     - run: &download_deps
         name: Download dependencies
         command: ./gradlew androidDependencies
     - save_cache: &save_cache
         paths:
           - ~/.gradle
-        key: jars-{{ checksum "build.gradle.kts" }}-{{ checksum  "app/build.gradle.kts" }}
+        key: jars-{{ checksum "build.gradle.kts" }}-{{ checksum "app/build.gradle.kts" }}
     - run: &build_debug_apk
         name: Build debug APK
         command: ./gradlew assembleDebug
