@@ -17,6 +17,9 @@ aliases:
     - run: &build_debug_apk
         name: Build debug APK
         command: ./gradlew assembleDebug
+    - run: &test
+        name: test
+        command: ./gradlew test
     - run: &upload_to_deploy_gate
         name: Upload to DeployGate # Set DG_API_KEY in CircleCI
         command: |
@@ -36,6 +39,14 @@ jobs:
       - run: *download_deps
       - save_cache: *save_cache
       - run: *build_debug_apk
+  test:
+    <<: *android_docker
+    steps:
+      - checkout
+      - restore_cache: *restore_cache
+      - run: *download_deps
+      - save_cache: *save_cache
+      - run: *test
   deploy:
     <<: *android_docker
     steps:
@@ -51,8 +62,11 @@ workflows:
   build_and_deploy:
     jobs:
       - build
+      - test
       - deploy:
-          requires: [build]
+          requires:
+            - build
+            - test
           filters:
             branches:
               only: master
